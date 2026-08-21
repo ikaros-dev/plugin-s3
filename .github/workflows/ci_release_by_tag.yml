@@ -25,4 +25,4 @@ jobs:
           # [possible values: variables $tag, $version, and any string]
           title: v$version
           # (Required) GitHub token for creating GitHub Releases.
-          token: ${{ secrets.GITHUB_PSERSON_TOKEN }}
+          token: ${{ secrets.CHIVEHAO_TOKEN }}

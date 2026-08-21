@@ -10,7 +10,7 @@ on:
 jobs:
 
   release:
-    if: github.repository == 'ikaros-dev/plugin-starter'
+    if: github.repository == 'ikaros-dev/plugin-s3'
     name: Build with java 21 and upload
     runs-on: ubuntu-latest
     steps:
@@ -42,8 +42,8 @@ jobs:
       - name: Upload lib jar to release
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.GITHUB_PSERSON_TOKEN }}
-          file: /home/runner/work/plugin-starter/plugin-starter/build/libs/plugin-bgmtv-${{steps.get_version.outputs.version}}.jar
+          repo_token: ${{ secrets.CHIVEHAO_TOKEN }}
+          file: /home/runner/work/plugin-s3/plugin-s3/build/libs/plugin-s3-${{steps.get_version.outputs.version}}.jar
           asset_name: plugin-bgmtv-${{steps.get_version.outputs.version}}.jar
 
 
