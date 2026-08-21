@@ -27,7 +27,13 @@ dependencies {
     compileOnly "org.springdoc:springdoc-openapi-starter-webflux-api:2.0.2"
 
     compileOnly files(libFile)
+    testCompileOnly files(libFile)
     testRuntimeOnly files(libFile)
+
+    testCompileOnly "org.springframework:spring-context:$springContext"
+    testCompileOnly "org.pf4j:pf4j:$pf4j"
+    testCompileOnly "io.projectreactor:reactor-core:3.5.1"
+    testCompileOnly "org.springframework:spring-webflux:6.0.3"
 
     testRuntimeOnly "org.springframework:spring-context:$springContext"
     testRuntimeOnly "org.pf4j:pf4j:$pf4j"

@@ -1,26 +1,26 @@
 import { definePlugin } from "@runikaros/shared"
-import HelloIkaros from '@/views/HelloIkaros.vue';
+import S3Guide from '@/views/S3Guide.vue';
 import { Files as FilesIcon } from '@element-plus/icons-vue';
-import {  markRaw } from "vue"
+import { markRaw } from "vue"
 
 export default definePlugin({
-    name: 'PluginStarter',
+    name: 'PluginS3',
     components: {},
     routes: [
       {
         parentName: "Root",
         route: {
-          path: '/PluginStarter',
-          component: HelloIkaros,
-          name: "HelloIkaros",
+          path: '/PluginS3',
+          component: S3Guide,
+          name: "S3Guide",
           meta: {
-            title: '示例页面',
+            title: 'S3对象存储',
             menu: {
-              name: '示例页面',
+              name: 'S3对象存储',
               group: 'content',
               icon: markRaw(FilesIcon),
-							priority: 2,
-							mobile: true,
+              priority: 2,
+              mobile: true,
             }
           }
         }
