@@ -44,7 +44,7 @@ jobs:
         with:
           repo_token: ${{ secrets.CHIVEHAO_TOKEN }}
           file: /home/runner/work/plugin-s3/plugin-s3/build/libs/plugin-s3-${{steps.get_version.outputs.version}}.jar
-          asset_name: plugin-bgmtv-${{steps.get_version.outputs.version}}.jar
+          asset_name: plugin-s3-${{steps.get_version.outputs.version}}.jar
 
 
 
