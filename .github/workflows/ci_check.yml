@@ -55,7 +55,7 @@ jobs:
       - name: Run tests
         run: ./gradlew test
       - name: Upload build dir if current step run failed.
-        uses: actions/upload-artifact@v3.1.2
+        uses: actions/upload-artifact@v6
         if: ${{ failure() }}
         with:
           # Artifact name
