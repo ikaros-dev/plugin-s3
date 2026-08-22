@@ -3,8 +3,10 @@ package run.ikaros.plugin.s3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.Instant;
+import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 import run.ikaros.plugin.s3.model.S3ObjectEntry;
+import run.ikaros.plugin.s3.utils.AwsSigV4Signer;
 
 /**
  * S3Client 单元测试：ListObjectsV2 响应 XML 解析、直链生成、配置解析.
@@ -71,7 +73,7 @@ class S3ClientTest {
     }
 
     @Test
-    void buildAccessUrlReplacesHostWithCustomDomain() {
+    void buildAccessUrlUsesCustomDomainAsSigningHost() {
         S3DriverConfig cfg = new S3DriverConfig();
         cfg.setEndpoint("https://oss-cn-hangzhou.aliyuncs.com");
         cfg.setRegion("cn-hangzhou");
@@ -80,15 +82,20 @@ class S3ClientTest {
         cfg.setSecretKey("SK");
         cfg.setDomain("https://cdn.example.com");
         S3Client client = new S3Client();
+        Instant now = Instant.ofEpochSecond(1720000000L);
 
-        String url = client.buildAccessUrl(cfg, "dir/obj.mp4", false,
-            Instant.ofEpochSecond(1720000000L), 3600);
+        String url = client.buildAccessUrl(cfg, "dir/obj.mp4", false, now, 3600);
 
+        // URL 使用自定义域名，且签名 host 也是自定义域名（与实际请求 host 一致，避免 SignatureDoesNotMatch）
         assertThat(url).startsWith("https://cdn.example.com/dir/obj.mp4?");
-        assertThat(url).contains("X-Amz-Algorithm=AWS4-HMAC-SHA256");
         assertThat(url).contains("X-Amz-SignedHeaders=host");
         // 不应再出现 OSS 原生域名
         assertThat(url).doesNotContain("my-bucket.oss-cn-hangzhou.aliyuncs.com");
+        // 签名应与"用自定义域名 host 直接预签名"的结果一致
+        String expected = AwsSigV4Signer.presignGetUrl("https", "cdn.example.com",
+            cfg.buildObjectUri("dir/obj.mp4"), new TreeMap<>(), 3600, now, "cn-hangzhou",
+            "AKID", "SK");
+        assertThat(url).isEqualTo(expected);
     }
 
     @Test

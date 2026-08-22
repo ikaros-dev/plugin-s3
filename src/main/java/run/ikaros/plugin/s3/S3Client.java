@@ -166,17 +166,18 @@ public class S3Client {
         if (download) {
             query.put("response-content-disposition", "attachment");
         }
-        String url = AwsSigV4Signer.presignGetUrl(cfg.getScheme(), cfg.getRequestHost(),
+        // 配置了自定义访问域名时，直接用自定义域名的协议+主机作为签名 host 生成预签名 URL。
+        // 关键：阿里云 OSS 通过自定义域名（CNAME）访问时，OSS 收到的请求 Host 就是自定义域名本身，
+        // 签名 host 必须与实际请求 host 一致才能通过校验；若用 OSS 原生域名签名再替换 host 会导致
+        // SignatureDoesNotMatch。
+        if (cfg.hasCustomDomain()) {
+            return AwsSigV4Signer.presignGetUrl(cfg.getDomainScheme(), cfg.getDomainHost(),
+                cfg.buildObjectUri(key), query, expiresSeconds, now, cfg.getRegion(),
+                cfg.getAccessKey(), cfg.getSecretKey());
+        }
+        return AwsSigV4Signer.presignGetUrl(cfg.getScheme(), cfg.getRequestHost(),
             cfg.buildObjectUri(key), query, expiresSeconds, now, cfg.getRegion(),
             cfg.getAccessKey(), cfg.getSecretKey());
-        // 配置了自定义访问域名（CDN/反代公开读场景）时，将预签名 URL 的 host 替换为自定义域名。
-        // 签名仍用 OSS 原生域名生成，CDN 回源时会把 host 改回源站域名，签名校验通过。
-        if (cfg.hasCustomDomain()) {
-            String originalHost = cfg.getScheme() + "://" + cfg.getRequestHost();
-            String customHost = cfg.getDomainScheme() + "://" + cfg.getDomainHost();
-            url = url.replace(originalHost, customHost);
-        }
-        return url;
     }
 
     /**
