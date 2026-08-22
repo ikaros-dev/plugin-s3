@@ -74,7 +74,7 @@ const commentOptions = [
   </div>
 </template>
 
-<style scoped>
+<style>
 .s3-guide-container {
   width: 100%;
   padding: 24px;
