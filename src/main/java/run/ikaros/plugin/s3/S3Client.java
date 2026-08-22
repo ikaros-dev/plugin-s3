@@ -180,9 +180,8 @@ public class S3Client {
      * 构建流式传输用直链（较短有效期）.
  */
     String buildStreamUrl(S3DriverConfig cfg, String key) {
-        if (cfg.hasCustomDomain()) {
-            return cfg.getDomain() + AwsSigV4Signer.canonicalizePath(key);
-        }
+        // 服务端流式代理必须始终携带签名：不能因配置了自定义域名而放弃签名，
+        // 否则对非公开读的存储桶请求会返回 403. 自定义域名仅用于给客户端的公开直链.
         return AwsSigV4Signer.presignGetUrl(cfg.getScheme(), cfg.getRequestHost(),
             cfg.buildObjectUri(key), new TreeMap<>(), S3Const.STREAM_PRE_SIGN_EXPIRE_SECONDS,
             Instant.now(), cfg.getRegion(), cfg.getAccessKey(), cfg.getSecretKey());
