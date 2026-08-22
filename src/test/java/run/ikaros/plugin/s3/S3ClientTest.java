@@ -2,6 +2,7 @@ package run.ikaros.plugin.s3;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import run.ikaros.plugin.s3.model.S3ObjectEntry;
 
@@ -67,6 +68,43 @@ class S3ClientTest {
         assertThat(fileEntry.getSize()).isEqualTo(1024L);
         assertThat(fileEntry.getEtag()).isEqualTo("abc123def456");
         assertThat(fileEntry.getLastModified()).isNotNull();
+    }
+
+    @Test
+    void buildAccessUrlReplacesHostWithCustomDomain() {
+        S3DriverConfig cfg = new S3DriverConfig();
+        cfg.setEndpoint("https://oss-cn-hangzhou.aliyuncs.com");
+        cfg.setRegion("cn-hangzhou");
+        cfg.setBucket("my-bucket");
+        cfg.setAccessKey("AKID");
+        cfg.setSecretKey("SK");
+        cfg.setDomain("https://cdn.example.com");
+        S3Client client = new S3Client();
+
+        String url = client.buildAccessUrl(cfg, "dir/obj.mp4", false,
+            Instant.ofEpochSecond(1720000000L), 3600);
+
+        assertThat(url).startsWith("https://cdn.example.com/dir/obj.mp4?");
+        assertThat(url).contains("X-Amz-Algorithm=AWS4-HMAC-SHA256");
+        assertThat(url).contains("X-Amz-SignedHeaders=host");
+        // 不应再出现 OSS 原生域名
+        assertThat(url).doesNotContain("my-bucket.oss-cn-hangzhou.aliyuncs.com");
+    }
+
+    @Test
+    void buildAccessUrlKeepsOriginalHostWithoutCustomDomain() {
+        S3DriverConfig cfg = new S3DriverConfig();
+        cfg.setEndpoint("https://oss-cn-hangzhou.aliyuncs.com");
+        cfg.setRegion("cn-hangzhou");
+        cfg.setBucket("my-bucket");
+        cfg.setAccessKey("AKID");
+        cfg.setSecretKey("SK");
+        S3Client client = new S3Client();
+
+        String url = client.buildAccessUrl(cfg, "dir/obj.mp4", false,
+            Instant.ofEpochSecond(1720000000L), 3600);
+
+        assertThat(url).startsWith("https://my-bucket.oss-cn-hangzhou.aliyuncs.com/dir/obj.mp4?");
     }
 
     @Test

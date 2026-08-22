@@ -192,6 +192,29 @@ public class S3DriverConfig {
     }
 
     /**
+     * 获取自定义访问域名的协议（http/https），未配置时返回端点协议.
+     *
+     * @return 自定义域名协议
+     */
+    public String getDomainScheme() {
+        return hasCustomDomain() ? URI.create(domain).getScheme() : getScheme();
+    }
+
+    /**
+     * 获取自定义访问域名的主机（含端口），未配置时返回端点主机.
+     *
+     * @return 自定义域名主机
+     */
+    public String getDomainHost() {
+        if (!hasCustomDomain()) {
+            return getHost();
+        }
+        URI uri = URI.create(domain);
+        int port = uri.getPort();
+        return port > 0 ? uri.getHost() + ":" + port : uri.getHost();
+    }
+
+    /**
      * S3 补充配置（comment 字段 JSON）.
      *
      * @author Nekoli

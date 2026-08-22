@@ -166,9 +166,17 @@ public class S3Client {
         if (download) {
             query.put("response-content-disposition", "attachment");
         }
-        return AwsSigV4Signer.presignGetUrl(cfg.getScheme(), cfg.getRequestHost(),
+        String url = AwsSigV4Signer.presignGetUrl(cfg.getScheme(), cfg.getRequestHost(),
             cfg.buildObjectUri(key), query, expiresSeconds, now, cfg.getRegion(),
             cfg.getAccessKey(), cfg.getSecretKey());
+        // 配置了自定义访问域名（CDN/反代公开读场景）时，将预签名 URL 的 host 替换为自定义域名。
+        // 签名仍用 OSS 原生域名生成，CDN 回源时会把 host 改回源站域名，签名校验通过。
+        if (cfg.hasCustomDomain()) {
+            String originalHost = cfg.getScheme() + "://" + cfg.getRequestHost();
+            String customHost = cfg.getDomainScheme() + "://" + cfg.getDomainHost();
+            url = url.replace(originalHost, customHost);
+        }
+        return url;
     }
 
     /**
