@@ -162,11 +162,6 @@ public class S3Client {
                                  Instant now, int expiresSeconds) {
         Assert.notNull(cfg, "'cfg' must not null.");
         Assert.hasText(key, "'key' must has text.");
-        if (cfg.hasCustomDomain()) {
-            // 公开读/CDN 场景：直接使用自定义域名拼接，不携带签名；
-            // 此时无法强制下载响应头，请通过 CDN/存储桶策略配置
-            return cfg.getDomain() + AwsSigV4Signer.canonicalizePath(key);
-        }
         TreeMap<String, String> query = new TreeMap<>();
         if (download) {
             query.put("response-content-disposition", "attachment");

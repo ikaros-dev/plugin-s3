@@ -73,13 +73,8 @@ public class S3AttachmentDriverFetcher implements AttachmentDriverFetcher {
         String key = attachment.getUrl();
         Assert.hasText(key, "'attachment.url' must has text for S3 object key.");
         UUID driverId = attachment.getDriverId();
-        if (FileUtils.isImage(attachment.getName())) {
-            // 图片直接返回预签名直链，便于控制台直接展示
-            return findDriver(driverId)
+        return findDriver(driverId)
                 .map(driver -> s3Client.buildAccessUrl(S3DriverConfig.parse(driver), key, false));
-        }
-        // 非图片文件统一走 ikaros 流式端点，由 getSteam 提供带范围支持的读取（视频拖动等）
-        return Mono.just(OpenApiConst.ATT_STREAM_ENDPOINT_PREFIX + '/' + attachment.getId());
     }
 
     @Override
