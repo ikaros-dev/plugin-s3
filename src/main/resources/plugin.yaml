@@ -4,7 +4,7 @@ name: PluginS3
 # plugin entry class that extends BasePlugin
 clazz: run.ikaros.plugin.s3.S3Plugin
 # plugin 'version' is a valid semantic version string (see semver.org).
-version: 1.0.0
+version: 1.0.1
 requires: ">=0.11.4"
 author:
   name: Ikaros OSS Team
