@@ -17,7 +17,7 @@ export default definePlugin({
             title: 'S3对象存储',
             menu: {
               name: 'S3对象存储',
-              group: 'content',
+              group: 'tool',
               icon: markRaw(FilesIcon),
               priority: 2,
               mobile: true,
