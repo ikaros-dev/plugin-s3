@@ -2,6 +2,8 @@
 
 更新日志文档，版本顺序从新到旧，最新版本在最前(上)面。
 
+# 1.0.5
+
 # 1.0.4
 
 - 修正项目名拼写 `plguin-s3` 为 `plugin-s3`（settings.gradle、plugin.yaml homepage、S3Const.REPO_GITHUB_NAME、README、IMPLEMENTATION）
