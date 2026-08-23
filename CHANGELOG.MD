@@ -4,6 +4,8 @@
 
 # 1.0.4
 
+- 修正项目名拼写 `plguin-s3` 为 `plugin-s3`（settings.gradle、plugin.yaml homepage、S3Const.REPO_GITHUB_NAME、README、IMPLEMENTATION）
+
 # 1.0.3
 
 - 修复控制台插件页面 scoped 样式在库模式打包下失效的问题，改用带唯一前缀的普通样式
