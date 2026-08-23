@@ -10,7 +10,7 @@ author:
   name: Ikaros OSS Team
   website: https://github.com/ikaros-dev
 logo: https://imgbed.ikaros.run/file/posts/1779018237740_icon.png
-homepage: https://github.com/ikaros-dev/plguin-s3
+homepage: https://github.com/ikaros-dev/plugin-s3
 displayName: "S3对象存储插件"
 description: "S3协议对象存储插件，提供对兼容S3协议的服务（AWS S3、MinIO、阿里云OSS等）的驱动附件挂载。"
 license: "AGPL-3.0"

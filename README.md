@@ -1,4 +1,4 @@
-# plguin-s3
+# plugin-s3
 
 S3 协议对象存储插件，为 ikaros 提供对兼容 S3 协议服务（AWS S3、MinIO、阿里云 OSS、腾讯云 COS 等）的驱动附件挂载。
 

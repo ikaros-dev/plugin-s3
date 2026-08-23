@@ -50,7 +50,7 @@ public interface S3Const {
     /**
      * 插件 GitHub 仓库.
      */
-    String REPO_GITHUB_NAME = "ikaros-dev/plguin-s3";
+    String REPO_GITHUB_NAME = "ikaros-dev/plugin-s3";
 
     /**
      * 请求 User-Agent.
